@@ -23,11 +23,8 @@ def le_arquivo(arquivo):
 	*Transições
 
 	As transições devem respeitar a seguinte configuração:
-	Origem Símbolo Destino (para AFD)
+	Origem Símbolo Destino (para AFD)'
 	ex.: q0 0 q0
-
-	Origem Símbolo Destinos (para AFN)
-	ex.: q0 a q1 q2
 
 	Caso determinado estado não processe um síbolo, não é
 	necessário especificar a transição no arquivo. Caso o

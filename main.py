@@ -14,34 +14,7 @@ def main():
 	respectivos métodos.
 	"""
 	try:
-		arquivo = sys.argv[1]
-		automatos.le_arquivo(arquivo)
-	except IndexError:
-		i = True
-		alfabeto = input('Entre com o alfabeto: ')
-		qtd_estados = int(input('Digite a quantidade de estados: '))
-		lista_estados = automatos.criar_estados(alfabeto, qtd_estados)
-		automatos.setInicial(lista_estados)
-
-		menu = input('AFD ou AFN? ')
-		if menu.upper() == 'AFD':
-			automatos.setTransicaoAFD(lista_estados, alfabeto)
-			automatos.setFinal(lista_estados)
-			while i == True:
-				palavra = automatos.getPalavra(alfabeto)
-				print('A palavra', palavra, automatos.processa_palavraAFD(lista_estados, palavra), 'pelo autômato')
-				sair = input('Sair? (S/N) ')
-				i = False if sair.upper() == 'S' else True
-		elif menu.upper() == 'AFN':
-			automatos.setTransicaoAFN(lista_estados, alfabeto)
-			automatos.setFinal(lista_estados)
-			while i == True:
-				palavra = automatos.getPalavra(alfabeto)
-				print('A palavra', palavra, automatos.processa_palavra(lista_estados, palavra), 'pelo autômato')
-				sair = input('Sair? (S/N) ')
-				i = False if sair.upper() == 'S' else True
-		else:
-			print('Palavra invalida')
+		automatos.le_arquivo('afn.txt')
 
 	except FileNotFoundError:
 		print('Arquivo não encontrado')

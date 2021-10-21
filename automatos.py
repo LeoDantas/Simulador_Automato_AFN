@@ -32,10 +32,10 @@ def le_arquivo(arquivo):
 	ex.: 'q0 b '
 	"""
 	with open(arquivo, 'r') as f:
-		tipo = f.readline().split()
-		qtd_estados = f.readline().split()
-		alfabeto = f.readline().split()
-		lista_estados = criar_estados(alfabeto[0], int(qtd_estados[0]))
+		tipo = 'afn'
+		alfabeto = f.readline().replace(',','').split()
+		qtd_estados = int(len([x.strip() for x in f.readline().split(',')]))
+		lista_estados = criar_estados(alfabeto[0], qtd_estados)
 
         # definindo estado inicial
 		linha = f.readline().split()
@@ -53,12 +53,11 @@ def le_arquivo(arquivo):
         # transicao = f.readline().split()    #[0] = estado; [1] = simbolo; [2:] = destinos
 		for transicao in f:
 			lista = []
-			t = transicao.split()
+			t = [x.strip() for x in transicao.split(',')]
 			for e in lista_estados:
 				if e.nome == t[0]:
-					for destino in t[2:]:
-						lista.append(destino)
-					e.transicao[t[1]] = lista.copy()
+					lista.append(t[1])
+					e.transicao[t[2]] = lista.copy()
 			lista.clear()
 	f.close()
 
@@ -81,17 +80,6 @@ def criar_estados(alfabeto, qtd_estados):
         estados.append(Estado(nome))
 
     return estados
-
-def setTransicaoAFD(lista_estados, alfabeto):
-    """
-    Recebe o alfabeto e define, para cada estado, a transição do mesmo.
-    Por se tratar de um AFD, cada símbolo processado só leva à um único
-    estado
-    """
-    for estado in lista_estados:
-        for simbolo in alfabeto:
-            index = input(estado.nome + '--' + simbolo + '-->')
-            estado.transicao[simbolo] = index
 
 def setTransicaoAFN(lista_estados, alfabeto):
 	"""
@@ -213,25 +201,3 @@ def processa_palavra(lista_estados, palavra):
 			return 'é aceita'
 	return 'não é aceita'
 
-def processa_palavraAFD(lista_estados, palavra):
-	"""
-	Procura o estado inicial na lista de estados e o torna estado atual.
-	E, para cada símbolo da palavra, verificar qual estado destino e torná-lo
-	o atual.
-	Se no final da palavra ".final" for "True", então a palavra é aceita pelo
-	autômato.
-	"""
-	# Busca o estado inicial
-	for e in lista_estados:
-		if e.inicial == True:
-			e_atual = e
-	# Para cada símbolo da Palavra
-	# verificar qual estado é ativado e torná-lo o estado atual
-	for simb in palavra:
-		nome_prox = e_atual.transicao[simb]
-		for e in lista_estados:
-			if e.nome == nome_prox:
-				e_atual = e
-	# Se o ultimo estado possuir o atributo '.final' = true, então
-	# a palavra é aceita
-	return 'é aceita' if e_atual.final is True else 'não é aceita'

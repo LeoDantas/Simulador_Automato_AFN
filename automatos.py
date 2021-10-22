@@ -33,7 +33,8 @@ def le_arquivo(arquivo):
 	"""
 	with open(arquivo, 'r') as f:
 		tipo = 'afn'
-		alfabeto = f.readline().replace(',','').split()
+		alfabeto = f.readline().replace('\n','') + ',e'
+		alfabeto = alfabeto.replace(',','').split()
 		qtd_estados = int(len([x.strip() for x in f.readline().split(',')]))
 		lista_estados = criar_estados(alfabeto[0], qtd_estados)
 
@@ -57,7 +58,11 @@ def le_arquivo(arquivo):
 			for e in lista_estados:
 				if e.nome == t[0]:
 					lista.append(t[1])
-					e.transicao[t[2]] = lista.copy()
+					if t[2] == 'epsilon':
+						e.transicao['e'] = lista.copy()
+					else:		
+						e.transicao[t[2]] = lista.copy()	
+			
 			lista.clear()
 	f.close()
 

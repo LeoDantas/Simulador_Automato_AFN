@@ -45,10 +45,12 @@ def le_arquivo(arquivo):
 				e.inicial = True
 
         # definindo estado final
-		linha = f.readline().split()
+		linha = f.readline().replace('\n','')
+		linha = linha.split(',')
 		for e in lista_estados:
-			if e.nome == linha[0]:
-				e.final = True
+			for j in range(len(linha)):
+				if e.nome == linha[j]:
+					e.final = True
 
         # recebendo todas as transições
         # transicao = f.readline().split()    #[0] = estado; [1] = simbolo; [2:] = destinos

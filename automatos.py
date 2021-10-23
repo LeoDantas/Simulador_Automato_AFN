@@ -86,24 +86,6 @@ def criar_estados(alfabeto, qtd_estados):
 
     return estados
 
-def setTransicaoAFN(lista_estados, alfabeto):
-	"""
-	Recebe o alfabeto e define, para cada estado, a transição do mesmo.
-    Por se tratar de um AFN, cada símbolo pode levar a mais de um estado.
-	A lista "conjunto" é responsável por armazenar os estados destinos e
-	posteriormente adicionada ao dicionário de transição.
-	"""
-	conjunto = []
-	for estado in lista_estados:
-		for simbolo in alfabeto:
-			conjunto.clear()
-			while True:
-				index = input(estado.nome + '--' + simbolo + '-->')
-				conjunto.append(index)
-				if input('Adicionar mais estados? (S/N) ').upper() == 'N':
-					break
-			estado.transicao[simbolo] = conjunto.copy()
-
 def setInicial(estados):
 	"""
 	Lista inicialmente todos os estados existentes
@@ -186,6 +168,8 @@ def processa_palavra(lista_estados, palavra):
 	e_ativos = []
 	e_ativos.append(e_atual)
 	fila_proc = []
+	conjunto = []
+	index = ' '
 
 	for simb in palavra:
 		while len(e_ativos) > 0:
@@ -198,11 +182,16 @@ def processa_palavra(lista_estados, palavra):
 					for e in lista_estados:
 						if e.nome == nome_estado:
 							fila_proc.append(e)
-		e_ativos = fila_proc.copy()
-		fila_proc.clear()
+							index += e_atual.nome + '--' + simb + '-->' + e.nome + ' \n '
+			#index =+ e_atual.nome + '--' + simb + '-->' 
+			#conjunto.append(index)
 
+		e_ativos = fila_proc.copy()
+		fila_proc.clear()	
+	
 	for estado in e_ativos:
 		if estado.final == True:
+			print(index)
 			return 'é aceita'
 	return 'não é aceita'
 

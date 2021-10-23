@@ -1,11 +1,5 @@
 class Estado:
-	"""
-	A classe estado possui os seguintes atributos:
-	nome -> identificação do estado
-	transicao -> dicionário contendo os símbolos do alfabeto e suas respectivas transições
-	final -> indicativo de estado final
-	inicial -> indicativo de estado inicial
-	"""
+	
 	def __init__(self, nome):
 		self.nome = nome
 		self.transicao = {}
@@ -13,24 +7,7 @@ class Estado:
 		self.inicial = False
 
 def le_arquivo(arquivo):
-	"""
-	O formato do arquivo deve respeitar a seguinte ordem:
-	*Tipo do atômato
-	*Quantidade de estados
-	*Alfabeto
-	*Estado inicial
-	*Estado final
-	*Transições
-
-	As transições devem respeitar a seguinte configuração:
-	Origem Símbolo Destino (para AFD)'
-	ex.: q0 0 q0
-
-	Caso determinado estado não processe um síbolo, não é
-	necessário especificar a transição no arquivo. Caso o
-	seja feito, deve seguir o exemplo.
-	ex.: 'q0 b '
-	"""
+	
 	with open(arquivo, 'r') as f:
 		tipo = 'afn'
 		alfabeto = f.readline().replace('\n','') + ',e'
@@ -53,7 +30,7 @@ def le_arquivo(arquivo):
 					e.final = True
 
         # recebendo todas as transições
-        # transicao = f.readline().split()    #[0] = estado; [1] = simbolo; [2:] = destinos
+        # transicao = f.readline().split()    #[0] = estadoorigem; [1] = estadestino; [2:] = simbolo (Que esta sendo processado)
 		for transicao in f:
 			lista = []
 			t = [x.strip() for x in transicao.split(',')]
@@ -71,7 +48,7 @@ def le_arquivo(arquivo):
 	sair = True
 	while sair:
 		palavra = input('Palavra a ser processada: ')
-		print('A palavra', palavra, processa_palavra(lista_estados, palavra), 'pelo', tipo[0])
+		print('A palavra', palavra, processa_palavra(lista_estados, palavra), 'pelo automato')
 		i = input('Sair? (S/N) ')
 		sair = (False) if i.upper() == 'S' else (True)
 
@@ -87,68 +64,6 @@ def criar_estados(alfabeto, qtd_estados):
         estados.append(Estado(nome))
 
     return estados
-
-def setInicial(estados):
-	"""
-	Lista inicialmente todos os estados existentes
-	O usuário entra com a id ".nome" do estado desejado
-	"""
-	for e in estados:
-		print('Estado:', e.nome)
-
-	cont = len(estados)
-	while(cont == len(estados)):
-		cont = 0
-		index = input('Qual estado inicial? ')
-		for e in estados:
-			if e.nome != index:
-				cont += 1
-		if cont == len(estados):
-			print('Estado inexistente')
-
-	for elem in estados:
-		if elem.nome == index:
-			elem.inicial = True
-
-def setFinal(estados):
-	"""
-	AFDs/AFNs podem ter mais de um estado final
-	Sendo assim, é requerido uma quantidade para definir o loop
-	"""
-	qtd = int(input('Quantidade de estados finais:'))
-
-	if qtd > len(estados):
-		print("Quantidade maior do que a de estados existentes")
-		while qtd > len(estados):
-			qtd = int(input('Quantidade de estados finais:'))
-
-
-	for i in estados:
-		print('Estado:',i.nome)
-	while qtd != 0:
-		nome = input('Estado final:')
-		for e in estados:
-			if e.nome == nome and e.final == True:
-				print('O estado', e.nome, 'já é um estado final')
-			elif e.nome == nome and e.final == False:
-				e.final = True
-				qtd -= 1
-
-def getPalavra(alfabeto):
-	"""
-	Recebe a palavra a ser processada pelo Autômato,
-	caso contenha símbolos diferente do alfabeto, a palavra não
-	será aceita
-	"""
-	i = True
-	while i:
-		palavra = input('Digite a palavra a ser preocessada: ')
-		for simb in palavra:
-			if alfabeto.count(simb) == 0:
-				print('A palavra contém símbolos não existentes no alfabeto')
-			else:
-				i = False
-	return palavra
 
 def processa_palavra(lista_estados, palavra):
 	"""
@@ -175,18 +90,13 @@ def processa_palavra(lista_estados, palavra):
 
 	for simb in palavra:
 		while len(e_ativos) > 0:
-	    	# Verificando se o estado ativado por 'simb' em 'e_atual'
-	    	# é diferente de vazio. Se sim, colocá-los como estados ativos
 			e_atual = e_ativos.pop()
 			if e_atual.transicao.get(simb) is not None:
 				for nome_estado in e_atual.transicao.get(simb):
-					# Adicionar o elemento q possui o 'nome'especificado
 					for e in lista_estados:
 						if e.nome == nome_estado:
 							fila_proc.append(e)
 							index += e_atual.nome + '--' + simb + '-->' + e.nome + ' \n '
-			#index =+ e_atual.nome + '--' + simb + '-->' 
-			#conjunto.append(index)
 
 		e_ativos = fila_proc.copy()
 		fila_proc.clear()	
